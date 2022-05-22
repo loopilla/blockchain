@@ -3,7 +3,7 @@ import Block from './Block';
 export default class BlockChain<T> {
   public chain: Array<Block<T>> = [];
 
-  constructor(data: T) {
+  constructor(data: T, private difficulty = 2) {
     this.chain = [this.createGenezisBlock(data)];
   }
 
@@ -17,7 +17,7 @@ export default class BlockChain<T> {
 
   public addBlock(block: Block<T>): void {
     block.previousHash = this.getLatestBlock().hash;
-    block.hash = block.calculateHash();
+    block.mine(this.difficulty);
     this.chain.push(block);
   }
 

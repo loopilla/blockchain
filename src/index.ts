@@ -1,14 +1,19 @@
 import Block from './blockchain/Block';
 import BlockChain from './blockchain/BlockChain';
 
+const difficulty = 3;
+
 type Data = {
   message: string;
 };
 
 // Test BlockChain Phase 1
-const chain = new BlockChain<Data>(<Data>{
-  message: 'Genezis block',
-});
+const chain = new BlockChain<Data>(
+  <Data>{
+    message: 'Genezis block',
+  },
+  difficulty
+);
 
 chain.addBlock(
   new Block<Data>(1, Date.now(), {
@@ -22,7 +27,7 @@ chain.addBlock(
   })
 );
 
-console.log(JSON.stringify(chain, null, 4));
+// console.log(JSON.stringify(chain, null, 4));
 
 console.log(`Is chain valid: ${chain.isChainValid()}`);
 
