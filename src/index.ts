@@ -23,3 +23,13 @@ chain.addBlock(
 );
 
 console.log(JSON.stringify(chain, null, 4));
+
+console.log(`Is chain valid: ${chain.isChainValid()}`);
+
+chain.chain[1].data = {
+  message: 'Chaged',
+};
+// Try to recalculate
+chain.chain[1].calculateHash();
+
+console.log(`Is chain valid: ${chain.isChainValid()}`);

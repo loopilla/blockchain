@@ -6,7 +6,7 @@ export default class Block<T> {
   constructor(
     private index: number = 0,
     private timestamp: number = Date.now(),
-    private data: T,
+    public data: T,
     public previousHash?: string
   ) {
     this.hash = this.calculateHash();
