@@ -1,13 +1,13 @@
 import {SHA256} from 'crypto-js';
+import Transaction from './Transaction';
 
-export default class Block<T> {
+export default class Block {
   public hash: string;
   public nonce = 0;
 
   constructor(
-    private index: number = 0,
     private timestamp: number = Date.now(),
-    public data: T,
+    public transactions: Array<Transaction>,
     public previousHash?: string
   ) {
     this.hash = this.calculateHash();
@@ -15,10 +15,9 @@ export default class Block<T> {
 
   public calculateHash(): string {
     return SHA256(`
-      ${this.index}
       ${this.previousHash}
       ${this.timestamp}
-      ${JSON.stringify(this.data)}
+      ${JSON.stringify(this.transactions)}
       ${this.nonce}
     `).toString();
   }
