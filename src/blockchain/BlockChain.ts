@@ -6,15 +6,18 @@ export default class BlockChain {
   public pendingTransactions: Array<Transaction> = [];
   public miningReward = 100;
 
-  constructor(data: Transaction, private difficulty = 2) {
-    this.chain = [this.createGenezisBlock(data)];
+  constructor(private difficulty = 2) {
+    this.chain = [this.createGenezisBlock()];
   }
 
-  private createGenezisBlock(data: Transaction): Block {
-    return new Block(Date.now(), [data], '0');
+  private createGenezisBlock(): Block {
+    return new Block(Date.now(), [], '0');
   }
 
   public minePendingTransaction(miningRewareAddress: string) {
+    this.pendingTransactions.push(
+      new Transaction(null, miningRewareAddress, this.miningReward)
+    );
     const block = new Block(Date.now(), this.pendingTransactions);
     block.mine(this.difficulty);
 
@@ -22,9 +25,10 @@ export default class BlockChain {
 
     this.chain.push(block);
 
-    this.pendingTransactions = [
-      new Transaction('', miningRewareAddress, this.miningReward),
-    ];
+    this.pendingTransactions = [];
+    // this.pendingTransactions = [
+    //   new Transaction('', miningRewareAddress, this.miningReward),
+    // ];
   }
 
   getBalanceOfAddress(address: string) {
@@ -45,7 +49,15 @@ export default class BlockChain {
     }, 0);
   }
 
-  public createTransaction(transaction: Transaction): void {
+  public addTransaction(transaction: Transaction): void {
+    if (!transaction.fromAddress || !transaction.toAddress) {
+      throw new Error('Transaction must include from and to address!');
+    }
+
+    if (!transaction.isValid()) {
+      throw new Error('Cannot add invalid transaction to chain!');
+    }
+
     this.pendingTransactions.push(transaction);
   }
 
@@ -66,6 +78,10 @@ export default class BlockChain {
           return true;
         }
         const previousBlock = wholeChain[index - 1];
+
+        if (!currentBlock.hasValidTransactions()) {
+          return false;
+        }
 
         if (currentBlock.hash !== currentBlock.calculateHash()) {
           return false;

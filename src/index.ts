@@ -1,23 +1,26 @@
 import Transaction from './blockchain/Transaction';
 import BlockChain from './blockchain/BlockChain';
+import {ec} from 'elliptic';
+import Keys from './keys';
 
 const difficulty = 3;
 
+// Generate random private and publlic keys in a singleton
+const keys = Keys.getInstance();
+
+const context = new ec('secp256k1');
+
+const myKey: ec.KeyPair = context.keyFromPrivate(keys.privateKey);
+const myWalletAddress = myKey.getPublic('hex');
+
 // Test BlockChain Phase 1
-const chain = new BlockChain(new Transaction('', '', 0), difficulty);
+const chain = new BlockChain(difficulty);
 
-chain.createTransaction(new Transaction('address1', 'address2', 100));
-chain.createTransaction(new Transaction('address2', 'address1', 50));
-
-console.log('\n Starting the miner..');
-chain.minePendingTransaction('loop');
+const tx1 = new Transaction(myWalletAddress, 'toAddress', 10);
+tx1.signTransaction(myKey);
+chain.addTransaction(tx1);
 
 console.log('\n Starting the miner..');
-chain.minePendingTransaction('loop');
+chain.minePendingTransaction(myWalletAddress);
 
-chain.createTransaction(new Transaction('loop', 'address1', 50));
-
-console.log('\n Starting the miner..');
-chain.minePendingTransaction('loop');
-
-console.log(`\nBalance of loop: ${chain.getBalanceOfAddress('loop')}`);
+console.log(`\nBalance of loop: ${chain.getBalanceOfAddress(myWalletAddress)}`);

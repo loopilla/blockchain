@@ -1,15 +1,21 @@
 {
-  "name": "Blockchain",
+  "name": "blockchain",
   "author": {
     "email": "loopilla@gmail.com",
     "name": "LOOP"
   },
   "description": "Cretae a blockchain with javascript",
-  "keywords": ["blockchain", "javascript", "typescript", "crypto"],
+  "keywords": [
+    "blockchain",
+    "javascript",
+    "typescript",
+    "crypto"
+  ],
   "license": "MIT",
   "version": "0.1.0",
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
+    "@types/elliptic": "^6.4.14",
     "@types/node": "^14.11.2",
     "gts": "^3.1.0",
     "nodemon": "^2.0.16",
@@ -28,6 +34,7 @@
   },
   "dependencies": {
     "crypto-js": "^4.1.1",
+    "elliptic": "^6.5.4",
     "tsc-watch": "^5.0.3"
   }
 }
